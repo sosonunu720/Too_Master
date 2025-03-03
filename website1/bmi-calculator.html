@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator - Multi-Tool Website</title>
+    <meta name="description" content="Calculate your Body Mass Index (BMI) with our free online BMI calculator tool">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .tool-icon {
+            margin-right: 10px;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        .result-card {
+            display: none;
+            transition: transform 0.3s;
+        }
+        .result-card.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bmi-category {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <h3 class="text-center mb-4">Tools</h3>
+                <div class="nav flex-column nav-pills">
+                    <a class="nav-link" href="index.html">
+                        <i class="fas fa-home tool-icon"></i>Home
+                    </a>
+                    <a class="nav-link" href="word-counter.html">
+                        <i class="fas fa-calculator tool-icon"></i>Word Counter
+                    </a>
+                    <a class="nav-link" href="age-calculator.html">
+                        <i class="fas fa-calendar-alt tool-icon"></i>Age Calculator
+                    </a>
+                    <a class="nav-link" href="image-converter.html">
+                        <i class="fas fa-image tool-icon"></i>Image Converter
+                    </a>
+                    <a class="nav-link active" href="bmi-calculator.html">
+                        <i class="fas fa-weight tool-icon"></i>BMI Calculator
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Include Ads -->
+                <?php include 'ads.php'; ?>
+
+                <h1 class="mb-4">BMI Calculator</h1>
+                <p class="lead">Calculate your Body Mass Index (BMI) and check your weight category.</p>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <form id="bmi-calculator-form">
+                                    <div class="mb-3">
+                                        <label class="form-label">Unit System</label>
+                                        <div class="btn-group w-100" role="group">
+                                            <input type="radio" class="btn-check" name="unit-system" id="metric" value="metric" checked>
+                                            <label class="btn btn-outline-primary" for="metric">Metric</label>
+                                            <input type="radio" class="btn-check" name="unit-system" id="imperial" value="imperial">
+                                            <label class="btn btn-outline-primary" for="imperial">Imperial</label>
+                                        </div>
+                                    </div>
+
+                                    <div id="metric-inputs">
+                                        <div class="mb-3">
+                                            <label for="height-cm" class="form-label">Height (cm)</label>
+                                            <input type="number" class="form-control" id="height-cm" min="1" step="0.1" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="weight-kg" class="form-label">Weight (kg)</label>
+                                            <input type="number" class="form-control" id="weight-kg" min="1" step="0.1" required>
+                                        </div>
+                                    </div>
+
+                                    <div id="imperial-inputs" style="display: none;">
+                                        <div class="mb-3">
+                                            <label for="height-ft" class="form-label">Height (ft)</label>
+                                            <input type="number" class="form-control" id="height-ft" min="1" step="1">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="height-in" class="form-label">Height (in)</label>
+                                            <input type="number" class="form-control" id="height-in" min="0" max="11" step="1">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="weight-lbs" class="form-label">Weight (lbs)</label>
+                                            <input type="number" class="form-control" id="weight-lbs" min="1" step="0.1">
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary w-100">Calculate BMI</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div id="result" class="card result-card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Your BMI Result</h5>
+                                <h2 id="bmi-value" class="display-4 mb-3">0.0</h2>
+                                <p id="bmi-category" class="bmi-category">-</p>
+                                <div class="progress mb-3">
+                                    <div id="bmi-indicator" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <div class="row text-start mt-4">
+                                    <div class="col-12">
+                                        <h6>BMI Categories:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><small>Underweight: < 18.5</small></li>
+                                            <li><small>Normal weight: 18.5 - 24.9</small></li>
+                                            <li><small>Overweight: 25 - 29.9</small></li>
+                                            <li><small>Obesity: ≥ 30</small></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer text-center">
+            <p>&copy; 2023 Multi-Tool Website. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/bmi-calculator.js"></script>
+    <script>
+        // Unit system toggle
+        document.querySelectorAll('input[name="unit-system"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('metric-inputs').style.display = 
+                    this.value === 'metric' ? 'block' : 'none';
+                document.getElementById('imperial-inputs').style.display = 
+                    this.value === 'imperial' ? 'block' : 'none';
+            });
+        });
+
+        // BMI calculation
+        document.getElementById('bmi-calculator-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let bmi = 0;
+            const unitSystem = document.querySelector('input[name="unit-system"]:checked').value;
+            
+            if (unitSystem === 'metric') {
+                const height = parseFloat(document.getElementById('height-cm').value) / 100; // convert to meters
+                const weight = parseFloat(document.getElementById('weight-kg').value);
+                bmi = weight / (height * height);
+            } else {
+                const heightFt = parseFloat(document.getElementById('height-ft').value || 0);
+                const heightIn = parseFloat(document.getElementById('height-in').value || 0);
+                const totalInches = (heightFt * 12) + heightIn;
+                const weight = parseFloat(document.getElementById('weight-lbs').value);
+                bmi = (weight / (totalInches * totalInches)) * 703;
+            }
+            
+            // Display result
+            document.getElementById('bmi-value').textContent = bmi.toFixed(1);
+            
+            // Determine BMI category and color
+            let category, color;
+            if (bmi < 18.5) {
+                category = 'Underweight';
+                color = 'bg-info';
+            } else if (bmi < 25) {
+                category = 'Normal weight';
+                color = 'bg-success';
+            } else if (bmi < 30) {
+                category = 'Overweight';
+                color = 'bg-warning';
+            } else {
+                category = 'Obesity';
+                color = 'bg-danger';
+            }
+            
+            document.getElementById('bmi-category').textContent = category;
+            
+            // Update progress bar
+            const indicator = document.getElementById('bmi-indicator');
+            indicator.className = `progress-bar ${color}`;
+            indicator.style.width = Math.min((bmi / 40) * 100, 100) + '%';
+            
+            document.getElementById('result').classList.add('show');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+/* Common styles for Multi-Tool Website */
+.sidebar {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding-top: 20px;
+}
+
+.tool-icon {
+    margin-right: 10px;
+}
+
+.main-content {
+    padding: 20px;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+/* Word Counter specific styles */
+.stats-card {
+    transition: transform 0.2s;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Age Calculator specific styles */
+.result-card {
+    transition: transform 0.2s;
+    display: none;
+}
+
+.result-card.show {
+    display: block;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Image Converter specific styles */
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    transition: border 0.3s ease;
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.drop-zone:hover {
+    border-color: #0d6efd;
+}
+
+.drop-zone.dragover {
+    border-color: #0d6efd;
+    background-color: #e9ecef;
+}
+
+.preview-image {
+    max-width: 300px;
+    max-height: 300px;
+    margin-top: 20px;
+    border-radius: 8px;
+    display: none;
+}
+
+.result-section {
+    display: none;
+    margin-top: 30px;
+}
+
+/* BMI Calculator specific styles */
+.result-card {
+    display: none;
+    transition: transform 0.3s;
+}
+
+.result-card.show {
+    display: block;
+    animation: fadeIn 0.5s;
+}
+
+.bmi-category {
+    font-weight: bold;
+    margin-top: 10px;
+}

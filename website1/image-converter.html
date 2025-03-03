@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter - Multi-Tool Website</title>
+    <meta name="description" content="Convert your images between different formats with our free online image converter tool">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <h3 class="text-center mb-4">Tools</h3>
+                <div class="nav flex-column nav-pills">
+                    <a class="nav-link" href="index.html">
+                        <i class="fas fa-home tool-icon"></i>Home
+                    </a>
+                    <a class="nav-link" href="word-counter.html">
+                        <i class="fas fa-calculator tool-icon"></i>Word Counter
+                    </a>
+                    <a class="nav-link" href="age-calculator.html">
+                        <i class="fas fa-calendar-alt tool-icon"></i>Age Calculator
+                    </a>
+                    <a class="nav-link active" href="image-converter.html">
+                        <i class="fas fa-image tool-icon"></i>Image Converter
+                    </a>
+                    <a class="nav-link" href="bmi-calculator.html">
+                        <i class="fas fa-weight tool-icon"></i>BMI Calculator
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Include Ads -->
+                <?php include 'ads.php'; ?>
+
+                <h1 class="mb-4">Image Converter</h1>
+                <p class="lead">Convert your JPG images to WebP format easily.</p>
+
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="drop-zone" id="dropZone">
+                                    <i class="fas fa-cloud-upload-alt fa-3x mb-3 text-primary"></i>
+                                    <h5>Drag & Drop your JPG image here</h5>
+                                    <p class="text-muted">or</p>
+                                    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                                        Choose File
+                                    </button>
+                                    <input type="file" id="fileInput" accept=".jpg,.jpeg" style="display: none">
+                                </div>
+                                <img id="previewImage" class="preview-image mx-auto d-block" alt="Preview">
+                                
+                                <div class="text-center mt-4">
+                                    <button id="convertBtn" class="btn btn-success btn-lg" disabled>
+                                        <i class="fas fa-sync-alt me-2"></i>Convert to WebP
+                                    </button>
+                                </div>
+
+                                <div id="resultSection" class="result-section text-center">
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-check-circle me-2"></i>Conversion Complete!
+                                    </div>
+                                    <a id="downloadBtn" href="#" class="btn btn-primary btn-lg" download="converted.webp">
+                                        <i class="fas fa-download me-2"></i>Download WebP
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer text-center">
+            <p>&copy; 2023 Multi-Tool Website. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewImage = document.getElementById('previewImage');
+        const convertBtn = document.getElementById('convertBtn');
+        const resultSection = document.getElementById('resultSection');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // Drag and drop handlers
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            handleFile(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            handleFile(file);
+        });
+
+        function handleFile(file) {
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.match('image/jpeg')) {
+                alert('Please select a JPG image file.');
+                return;
+            }
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+                convertBtn.disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        convertBtn.addEventListener('click', () => {
+            // Create a canvas element
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Create an image object
+            const img = new Image();
+            img.onload = () => {
+                // Set canvas dimensions to match image
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                // Draw image on canvas
+                ctx.drawImage(img, 0, 0);
+
+                // Convert to WebP
+                canvas.toBlob((blob) => {
+                    // Create download link
+                    const url = URL.createObjectURL(blob);
+                    downloadBtn.href = url;
+                    
+                    // Show result section
+                    resultSection.style.display = 'block';
+                }, 'image/webp');
+            };
+            img.src = previewImage.src;
+        });
+
+        // Clean up object URL when downloading
+        downloadBtn.addEventListener('click', () => {
+            setTimeout(() => {
+                URL.revokeObjectURL(downloadBtn.href);
+            }, 100);
+        });
+    </script>
+</body>
+</html>
